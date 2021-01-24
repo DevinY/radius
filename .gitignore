@@ -1,0 +1,9 @@
+*.swp
+diff2html.sh
+data
+data/*
+data/mysql/*
+sql
+clients.conf
+server.crt
+server.key

@@ -1,0 +1,41 @@
+version: '3.6'
+services:
+#=== web container ======================
+ radius:
+  build: .
+  depends_on:
+    - db
+  dns: 8.8.8.8
+  ports:
+    - "1812:1812/udp"
+    - "1813:1813/udp"
+  volumes:
+    - ./radiusd.conf:/etc/freeradius/3.0/radiusd.conf
+    - ./sql:/etc/freeradius/3.0/mods-enabled/sql
+    - ./eap:/etc/freeradius/3.0/mods-enabled/eap
+    - ./default:/etc/freeradius/3.0/sites-available/default
+    - ./inner-tunnel:/etc/freeradius/3.0/sites-available/inner-tunnel
+    - ./clients.conf:/etc/freeradius/3.0/clients.conf
+    - ./server.crt:/etc/freeradius/3.0/certs/server.crt
+    - ./server.key:/etc/freeradius/3.0/certs/server.key
+  hostname: radius
+  networks:
+    - dlaravel_net
+
+#=== db service ===========================
+ db:
+  image: mariadb:10.5.5
+  hostname: db
+  ports:
+    - "33060:3306"
+  volumes:
+    - ./data:/var/lib/mysql
+  environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD= "yes"
+    - TZ=Asia/Taipei
+  networks:
+    - dlaravel_net
+
+#=== top-level netowks key ======================
+networks:
+    dlaravel_net:

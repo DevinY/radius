@@ -19,6 +19,10 @@ services:
     - ./server.crt:/etc/freeradius/3.0/certs/server.crt
     - ./server.key:/etc/freeradius/3.0/certs/server.key
   hostname: radius
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "2m"
   networks:
     - dlaravel_net
 
@@ -26,8 +30,6 @@ services:
  db:
   image: mariadb:10.5.5
   hostname: db
-  ports:
-    - "33060:3306"
   volumes:
     - ./data:/var/lib/mysql
   environment:
